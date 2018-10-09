@@ -16,10 +16,10 @@ def excel2json(workbook):
 			for col in range(0,page.ncols):
 				data[str(page.cell(0,col).value)] = str(page.cell(row,col).value)
 			source[sheet].append(data)
-	return source
+	return source,"",False
 
 workbook = "Ahold.xlsx"
-book = excel2json(workbook)
+book,phonenumber,signedin = excel2json(workbook)
 
 app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -56,9 +56,6 @@ def webhook():
 		return json.dumps({"fulfillmentText":request_data["result"]})
 	else:
 		return "<h1>Home</h1>"
-
-phonenumber = ""
-signedin = False
 
 if __name__ == '__main__':
 	port = int(os.getenv('PORT', 5000))
