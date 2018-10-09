@@ -38,7 +38,7 @@ def webhook():
 		print (request_data)
 		
 		if request_data["unknown"] == "welcome":
-			if session["signedin"]:
+			if session["signedin"]==True:
 				request_data["result"] = "how may i assist you?"
 			else:
 				request_data["result"] = request_data["fulfillmentText"]
@@ -52,7 +52,7 @@ def webhook():
 		if request_data["unknown"] == "Thankyou":
 			session["phonenumber"],session["signedin"],request_data["result"] = "",False, request_data["fulfillmentText"]
 					
-		
+		print(session)
 		print (request_data["result"])
 		return json.dumps({"fulfillmentText":request_data["result"]})
 	else:
