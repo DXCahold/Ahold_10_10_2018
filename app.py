@@ -21,6 +21,8 @@ def excel2json(workbook):
 workbook = "Ahold.xlsx"
 book = excel2json(workbook)
 
+phonenumber = ""
+
 app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
@@ -34,38 +36,19 @@ def webhook():
 			request_data["known"].update({key : req['queryResult']['parameters'][key]})
 		request_data["unknown"] = str(req['queryResult']['intent']['displayName'])
 		request_data["fulfillmentText"] = str(req['queryResult']['fulfillmentText'])
-		result = ""
 		print (request_data)
-		if request_data["unknown"] == "product":
-			availables,outofstocks = [],[]
-			for sheet in book.keys():
-				for row in book[sheet]:
-					headers = row.keys()
-					if "content" in headers:
-						for key in request_data['known']:
-							if len(request_data['known'][key])>0:
-								if request_data['known'][key] in row[key]:
-									if int(float(row["quantity"]))>0:
-										availables.append(row[request_data["unknown"]])
-									else:
-										outofstocks.append(row[request_data["unknown"]])
-			if len(availables)>0:
-				request_data["result"] = str(request_data["fulfillmentText"]).replace('*result','available').replace('*availables ',str(availables).replace("[","").replace("]","").replace("'","").replace('"',''))
-			else:
-				request_data["result"] = str(request_data["fulfillmentText"]).replace('*result','not available').replace("you can find *availables  in stock"," sorry for inconvenience!")
-			if len(outofstocks)>0:
-				request_data["result"] = str(request_data["result"]).replace("*outofstocks",str(outofstocks).replace("[","").replace("]","").replace("'","").replace('"',''))
-			else:
-				request_data["result"] = str(request_data["result"]).replace(" *outofstocks currently unavailable","")
-		else:
-			for sheet in book.keys():
-				for row in book[sheet]:
-					headers = row.keys()
-					if request_data["unknown"] in headers:
-						for key in request_data['known']:
-							if request_data['known'][key] == row[key]:
-								result = row[request_data["unknown"]]
-			request_data["result"] = request_data["fulfillmentText"].replace("*result",result)
+		
+		if request_data["unknown"] == "phonenumber-yes":
+			phonenumber = request_data['known']['phone-number']
+			request_data["result"] = request_data["fulfillmentText"]
+		
+		if request_data["unknown"] == "phonenumber-no":
+			phonenumber = ""
+			request_data["result"] = request_data["fulfillmentText"]
+		
+		
+		
+		
 		print (request_data["result"])
 		return json.dumps({"fulfillmentText":request_data["result"]})
 	else:
