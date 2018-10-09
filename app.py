@@ -37,6 +37,12 @@ def webhook():
 		request_data["fulfillmentText"] = str(req['queryResult']['fulfillmentText'])
 		print (request_data)
 		
+		if request_data["unknown"] == "welcome":
+			if signedin:
+				request_data["result"] = "how may i assist you?"
+			else:
+				request_data["result"] = request_data["fulfillmentText"]
+			
 		if request_data["unknown"] == "phonenumber-yes":
 			phonenumber,signedin,request_data["result"] = request_data['known']['phone-number'],True,request_data["fulfillmentText"].replace("*result",str([request_data['known']['phone-number'][i:i+1] for i in range(0,len(request_data['known']['phone-number']),1)]).replace(" ","").replace("'","").replace("[","").replace("]","").replace(","," "))
 		
