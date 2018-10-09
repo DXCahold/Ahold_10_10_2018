@@ -4,9 +4,6 @@ from flask import Flask
 from flask import request
 from flask import make_response
 
-phonenumber = ""
-signedin = False
-
 def excel2json(workbook):
 	book = xlrd.open_workbook(workbook)
 	sheets = book.sheet_names()
@@ -59,6 +56,9 @@ def webhook():
 		return json.dumps({"fulfillmentText":request_data["result"]})
 	else:
 		return "<h1>Home</h1>"
+
+phonenumber = ""
+signedin = False
 
 if __name__ == '__main__':
 	port = int(os.getenv('PORT', 5000))
