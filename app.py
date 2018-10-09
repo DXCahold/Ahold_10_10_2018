@@ -38,7 +38,8 @@ def webhook():
 		print (request_data)
 		
 		if request_data["unknown"] == "phonenumber-yes":
-			phonenumber,signedin,request_data["result"] = request_data['known']['phone-number'],True,request_data["fulfillmentText"].replace("*result",request_data['known']['phone-number'])
+			
+			phonenumber,signedin,request_data["result"] = request_data['known']['phone-number'],True,request_data["fulfillmentText"].replace("*result",str([request_data['known']['phone-number'][i:i+1] for i in range(0,len(request_data['known']['phone-number']),1)]).replace(" ","").replace("'","").replace("[","").replace("]","").replace(","," "))
 		
 		if request_data["unknown"] == "phonenumber-no":
 			phonenumber,signedin,request_data["result"] = "",True,request_data["fulfillmentText"]
