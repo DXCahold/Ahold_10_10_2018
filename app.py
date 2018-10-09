@@ -8,6 +8,7 @@ def excel2json(workbook):
 	book = xlrd.open_workbook(workbook)
 	sheets = book.sheet_names()
 	source={}
+	sessiondetails = {"signedin":False,"phonenumber":""}
 	for sheet in sheets:
 		source[sheet] = []
 		page = book.sheet_by_name(sheet)
@@ -16,10 +17,10 @@ def excel2json(workbook):
 			for col in range(0,page.ncols):
 				data[str(page.cell(0,col).value)] = str(page.cell(row,col).value)
 			source[sheet].append(data)
-	return source,"",False
+	return source,sessiondetails
 
 workbook = "Ahold.xlsx"
-book,phonenumber,signedin = excel2json(workbook)
+book,session = excel2json(workbook)
 
 app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -37,19 +38,19 @@ def webhook():
 		print (request_data)
 		
 		if request_data["unknown"] == "welcome":
-			if signedin:
+			if session["signedin"]:
 				request_data["result"] = "how may i assist you?"
 			else:
 				request_data["result"] = request_data["fulfillmentText"]
 			
 		if request_data["unknown"] == "phonenumber-yes":
-			phonenumber,signedin,request_data["result"] = request_data['known']['phone-number'],True,request_data["fulfillmentText"].replace("*result",str([request_data['known']['phone-number'][i:i+1] for i in range(0,len(request_data['known']['phone-number']),1)]).replace(" ","").replace("'","").replace("[","").replace("]","").replace(","," "))
+			session["phonenumber"],session["signedin"],request_data["result"] = request_data['known']['phone-number'],True,request_data["fulfillmentText"].replace("*result",str([request_data['known']['phone-number'][i:i+1] for i in range(0,len(request_data['known']['phone-number']),1)]).replace(" ","").replace("'","").replace("[","").replace("]","").replace(","," "))
 		
 		if request_data["unknown"] == "phonenumber-no":
-			phonenumber,signedin,request_data["result"] = "",True,request_data["fulfillmentText"]
+			session["phonenumber"],session["signedin"],request_data["result"] = "",True,request_data["fulfillmentText"]
 			
 		if request_data["unknown"] == "Thankyou":
-			phonenumber,signedin,request_data["result"] = "",False, request_data["fulfillmentText"]
+			session["phonenumber"],session["signedin"],request_data["result"] = "",False, request_data["fulfillmentText"]
 					
 		
 		print (request_data["result"])
