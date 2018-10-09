@@ -4,6 +4,8 @@ from flask import Flask
 from flask import request
 from flask import make_response
 
+phonenumber,signedin = "",False
+
 def excel2json(workbook):
 	book = xlrd.open_workbook(workbook)
 	sheets = book.sheet_names()
@@ -20,7 +22,7 @@ def excel2json(workbook):
 
 workbook = "Ahold.xlsx"
 book = excel2json(workbook)
-phonenumber,signedin = "",False
+
 
 app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
