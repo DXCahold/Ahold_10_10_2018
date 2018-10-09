@@ -40,7 +40,7 @@ def webhook():
 		
 		if request_data["unknown"] == "phonenumber-yes":
 			phonenumber = request_data['known']['phone-number']
-			request_data["result"] = request_data["fulfillmentText"]
+			request_data["result"] = request_data["fulfillmentText"].replace("*result",str(phonenumber))
 		
 		if request_data["unknown"] == "phonenumber-no":
 			phonenumber = ""
