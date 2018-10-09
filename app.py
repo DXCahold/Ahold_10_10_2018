@@ -4,8 +4,8 @@ from flask import Flask
 from flask import request
 from flask import make_response
 
-global phonenumber = ""
-global signedin = False
+phonenumber = ""
+signedin = False
 
 def excel2json(workbook):
 	book = xlrd.open_workbook(workbook)
