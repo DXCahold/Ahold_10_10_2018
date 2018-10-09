@@ -23,7 +23,6 @@ def excel2json(workbook):
 
 workbook = "Ahold.xlsx"
 book = excel2json(workbook)
-print(signedin)
 
 app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -39,7 +38,7 @@ def webhook():
 		request_data["unknown"] = str(req['queryResult']['intent']['displayName'])
 		request_data["fulfillmentText"] = str(req['queryResult']['fulfillmentText'])
 		print (request_data)
-		print(signedin)
+		
 		if request_data["unknown"] == "welcome":
 			if signedin:
 				request_data["result"] = "how may i assist you?"
