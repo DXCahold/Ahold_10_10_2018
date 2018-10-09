@@ -20,7 +20,6 @@ def excel2json(workbook):
 
 workbook = "Ahold.xlsx"
 book = excel2json(workbook)
-
 phonenumber,signedin = "",False
 
 app = Flask(__name__)
@@ -39,7 +38,7 @@ def webhook():
 		print (request_data)
 		
 		if request_data["unknown"] == "phonenumber-yes":
-			phonenumber,signedin,request_data["result"] = request_data['known']['phone-number'],True,request_data["fulfillmentText"].replace("*result",str(phonenumber))
+			phonenumber,signedin,request_data["result"] = request_data['known']['phone-number'],True,request_data["fulfillmentText"].replace("*result",request_data['known']['phone-number'])
 		
 		if request_data["unknown"] == "phonenumber-no":
 			phonenumber,signedin,request_data["result"] = "",True,request_data["fulfillmentText"]
